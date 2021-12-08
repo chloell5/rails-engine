@@ -116,14 +116,15 @@ describe 'Item API' do
 
     get api_v1_item_merchant_path(item)
     expect(response).to be_successful
-    binding.pry
-    merchant = JSON.parse(response.body, symbolize_names: true)
 
-    expect(merchant).to be_a(Hash)
-    expect(merchant[:data]).to have_key(:id)
-    expect(merchant[:data]).to have_key(:type)
-    expect(merchant[:data][:type]).to eq('merchant')
-    expect(merchant[:data][:attributes]).to have_key(:name)
-    expect(merchant[:data][:attributes][:name]).to be_a String
+    merchant_parse = JSON.parse(response.body, symbolize_names: true)
+
+    expect(merchant_parse).to be_a(Hash)
+    expect(merchant_parse[:data]).to have_key(:id)
+    expect(merchant_parse[:data]).to have_key(:type)
+    expect(merchant_parse[:data][:id].to_i).to eq(merchant.id)
+    expect(merchant_parse[:data][:type]).to eq('merchant')
+    expect(merchant_parse[:data][:attributes]).to have_key(:name)
+    expect(merchant_parse[:data][:attributes][:name]).to be_a String
   end
 end
