@@ -36,14 +36,6 @@ describe 'Item API' do
     items = JSON.parse(response.body, symbolize_names: true)
 
     expect(items).to be_a(Hash)
-<<<<<<< HEAD
-<<<<<<< HEAD
-    # expect(items[:data]).to be_an(Array)
-    # expect(items[:data].count).to eq(1)
-=======
->>>>>>> 4ff2ae6e4a2d270bf9ca14ea22eb2e04c6f313d2
-=======
->>>>>>> 94be5deb609acd5704f1ff1a88fda90fd269a0a8
     expect(items[:data]).to have_key(:id)
     expect(items[:data]).to have_key(:type)
     expect(items[:data][:type]).to eq('item')
@@ -73,7 +65,9 @@ describe 'Item API' do
     expect(response).to be_successful
 
     expect(item.name).to eq(item_params[:name])
-
+    expect(item.description).to eq(item_params[:description])
+    expect(item.unit_price).to eq(item_params[:unit_price])
+    expect(item.merchant_id).to eq(item_params[:merchant_id])
   end
   it 'edits an item'
   it 'deletes an item'
