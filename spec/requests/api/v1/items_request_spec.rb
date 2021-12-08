@@ -99,5 +99,13 @@ describe 'Item API' do
     expect(item.unit_price).to_not eq(unit_price)
   end
 
-  it 'deletes an item'
+  it 'deletes an item' do
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
+
+    delete api_v1_item_path(item)
+
+    expect(response).to be_successful
+    expect(Item.count).to eq(0)
+  end
 end
