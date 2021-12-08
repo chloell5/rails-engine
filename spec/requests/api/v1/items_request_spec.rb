@@ -50,15 +50,15 @@ describe 'Item API' do
   it 'creates an item' do
     merchant = create(:merchant)
     item_params = {
-      name: "Test",
-      description: "I really hope this works",
-      unit_price: 123.45,
-      merchant_id: merchant.id
-    }
+                    name: "Test",
+                    description: "I really hope this works",
+                    unit_price: 123.45,
+                    merchant_id: merchant.id
+                  }
 
     headers = {"CONTENT_TYPE" => "application/json"}
 
-    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+    post api_v1_items_path, headers: headers, params: JSON.generate(item: item_params)
 
     item = Item.last
 
@@ -69,6 +69,35 @@ describe 'Item API' do
     expect(item.unit_price).to eq(item_params[:unit_price])
     expect(item.merchant_id).to eq(item_params[:merchant_id])
   end
-  it 'edits an item'
+
+  it 'edits an item' do
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
+    name = item.name
+    description = item.description
+    unit_price = item.unit_price
+    item_params = {
+                    name: "Test Edit",
+                    description: "I really believe this will work",
+                    unit_price: 543.21,
+                  }
+
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    patch api_v1_item_path(item), headers: headers, params: JSON.generate(item: item_params)
+
+    item = Item.last
+
+    expect(response).to be_successful
+
+    expect(item.name).to eq(item_params[:name])
+    expect(item.description).to eq(item_params[:description])
+    expect(item.unit_price).to eq(item_params[:unit_price])
+
+    expect(item.name).to_not eq(name)
+    expect(item.description).to_not eq(description)
+    expect(item.unit_price).to_not eq(unit_price)
+  end
+
   it 'deletes an item'
 end
