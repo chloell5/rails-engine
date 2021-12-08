@@ -46,4 +46,27 @@ describe 'Item API' do
     expect(items[:data][:attributes][:description]).to be_a String
     expect(items[:data][:attributes][:unit_price]).to be_a Float
   end
+
+  it 'creates an item' do
+    merchant = create(:merchant)
+    item_params = {
+      name: "Test",
+      description: "I really hope this works",
+      unit_price: 123.45,
+      merchant_id: merchant.id
+    }
+
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    item = Item.last
+
+    expect(response).to be_successful
+
+    expect(item.name).to eq(item_params[:name])
+
+  end
+  it 'edits an item'
+  it 'deletes an item'
 end
