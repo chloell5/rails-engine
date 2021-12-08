@@ -37,10 +37,13 @@ describe 'Item API' do
 
     expect(items).to be_a(Hash)
 <<<<<<< HEAD
+<<<<<<< HEAD
     # expect(items[:data]).to be_an(Array)
     # expect(items[:data].count).to eq(1)
 =======
 >>>>>>> 4ff2ae6e4a2d270bf9ca14ea22eb2e04c6f313d2
+=======
+>>>>>>> 94be5deb609acd5704f1ff1a88fda90fd269a0a8
     expect(items[:data]).to have_key(:id)
     expect(items[:data]).to have_key(:type)
     expect(items[:data][:type]).to eq('item')
