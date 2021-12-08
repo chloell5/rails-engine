@@ -36,8 +36,6 @@ describe 'Item API' do
     items = JSON.parse(response.body, symbolize_names: true)
 
     expect(items).to be_a(Hash)
-    # expect(items[:data]).to be_an(Array)
-    # expect(items[:data].count).to eq(1)
     expect(items[:data]).to have_key(:id)
     expect(items[:data]).to have_key(:type)
     expect(items[:data][:type]).to eq('item')

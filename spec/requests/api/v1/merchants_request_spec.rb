@@ -30,8 +30,6 @@ describe 'Merchant API' do
     merchants = JSON.parse(response.body, symbolize_names: true)
 
     expect(merchants).to be_a(Hash)
-    # expect(merchants[:data]).to be_an(Array)
-    # expect(merchants[:data].count).to eq(1)
     expect(merchants[:data]).to have_key(:id)
     expect(merchants[:data]).to have_key(:type)
     expect(merchants[:data][:type]).to eq('merchant')
