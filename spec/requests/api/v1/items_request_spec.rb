@@ -68,6 +68,7 @@ describe 'Item API' do
     expect(item.description).to eq(item_params[:description])
     expect(item.unit_price).to eq(item_params[:unit_price])
     expect(item.merchant_id).to eq(item_params[:merchant_id])
+    expect(response).to have_http_status(201)
   end
 
   it 'edits an item' do
