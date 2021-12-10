@@ -81,19 +81,6 @@ describe 'Item API' do
       expect(response).to have_http_status(201)
     end
 
-    it 'takes invalid data on item creation' do
-      merchant = create(:merchant)
-      item_params = {
-        name: nil,
-        description: 'I really hope this works',
-        unit_price: 123.45,
-        merchant_id: merchant.id
-      }
-
-      post api_v1_items_path, headers: headers, params: JSON.generate(item: item_params)
-
-      expect(response).to_not be_successful
-    end
     it 'edits an item' do
       merchant = create(:merchant)
       item = create(:item, merchant_id: merchant.id)
