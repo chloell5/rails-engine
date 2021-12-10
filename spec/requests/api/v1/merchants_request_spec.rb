@@ -72,7 +72,7 @@ describe 'Merchant API' do
         expect(items[:data].first[:attributes][:unit_price]).to be_a Float
       end
 
-      it 'when no items' do
+      it 'when no items has an array of 0' do
         merchant = create(:merchant)
 
         get api_v1_merchant_items_path(merchant)
