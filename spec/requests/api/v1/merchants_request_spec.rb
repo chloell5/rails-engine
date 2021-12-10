@@ -77,11 +77,9 @@ describe 'Merchant API' do
 
         expect(merchants[:data]).to be_an(Array)
         expect(merchants[:data].count).to eq(3)
-        within(merchants) do
-          expect(merchant4.name).to appear_before(merchant1.name)
-          expect(mercant1.name).to appear_before(merchant2.name)
-          expect(items[:data]).to_not include(merchant3.name)
-        end
+        expect(merchants[:data][0][:attributes][:name]).to eq(merchant4.name)
+        expect(merchants[:data][1][:attributes][:name]).to eq(merchant1.name)
+        expect(merchants[:data][2][:attributes][:name]).to eq(merchant2.name)
       end
 
       it 'returns an array of length 0 when nothing is found' do
