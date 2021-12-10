@@ -16,7 +16,6 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update
-    validate_merchant_id
     render json: ItemSerializer.new(Item.update(params[:id], item_params))
   end
 
@@ -24,16 +23,13 @@ class Api::V1::ItemsController < ApplicationController
     Item.delete(params[:id])
   end
 
+  def find
+
+  end
+
   private
 
   def item_params
     params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
-  end
-
-  def validate_merchant_id
-    if params[:merchant_id]
-      merchant = Merchant.find_by(id: params[:merchant_id])
-      raise ActionController::BadRequest unless merchant
-    end
   end
 end

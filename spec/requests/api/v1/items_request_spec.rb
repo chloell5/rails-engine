@@ -80,7 +80,7 @@ describe 'Item API' do
     item_params = {
                     name: "Test Edit",
                     description: "I really believe this will work",
-                    unit_price: 543.21,
+                    unit_price: 543.21
                   }
 
     headers = {"CONTENT_TYPE" => "application/json"}
