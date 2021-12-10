@@ -81,6 +81,19 @@ describe 'Item API' do
       expect(response).to have_http_status(201)
     end
 
+    it 'takes invalid data on item creation' do
+      merchant = create(:merchant)
+      item_params = {
+        name: nil,
+        description: 'I really hope this works',
+        unit_price: 123.45,
+        merchant_id: merchant.id
+      }
+
+      post api_v1_items_path, headers: headers, params: JSON.generate(item: item_params)
+
+      expect(response).to_not be_successful
+    end
     it 'edits an item' do
       merchant = create(:merchant)
       item = create(:item, merchant_id: merchant.id)
@@ -119,8 +132,9 @@ describe 'Item API' do
       expect(response).to be_successful
       expect(Item.count).to eq(0)
     end
+  end
 
-    it 'gets merchant data for an item' do
+  it 'gets merchant data for an item' do
       merchant = create(:merchant)
       item = create(:item, merchant_id: merchant.id)
 
@@ -138,70 +152,69 @@ describe 'Item API' do
       expect(merchant_parse[:data][:attributes][:name]).to be_a String
     end
 
-    describe 'search functionality' do
-      it 'searches for valid names and returns all' do
-        merchant = Merchant.create!(name: 'Test Mer')
-        item1 = Item.create!(name: 'Test Item', description: 'asd', unit_price: 1, merchant_id: merchant.id)
-        item2 = Item.create!(name: 'Fail Item', description: 'asd', unit_price: 1, merchant_id: merchant.id)
-        item3 = Item.create!(name: 'Another test', description: 'asd', unit_price: 1, merchant_id: merchant.id)
+  describe 'search functionality' do
+    it 'searches for valid names and returns all' do
+      merchant = Merchant.create!(name: 'Test Mer')
+      item1 = Item.create!(name: 'Test Item', description: 'asd', unit_price: 1, merchant_id: merchant.id)
+      item2 = Item.create!(name: 'Fail Item', description: 'asd', unit_price: 1, merchant_id: merchant.id)
+      item3 = Item.create!(name: 'Another test', description: 'asd', unit_price: 1, merchant_id: merchant.id)
 
-        get api_v1_items_find_path, params: { name: 'tesT' }
+      get api_v1_items_find_path, params: { name: 'tesT' }
 
-        expect(response).to be_successful
+      expect(response).to be_successful
 
-        items = JSON.parse(response.body, symbolize_names: true)
+      items = JSON.parse(response.body, symbolize_names: true)
 
-        expect(items[:data][:attributes][:name]).to eq(item3.name)
-        expect(items[:data][:attributes][:name]).to_not include(item2.name, item1.name)
-      end
+      expect(items[:data][:attributes][:name]).to eq(item3.name)
+      expect(items[:data][:attributes][:name]).to_not include(item2.name, item1.name)
+    end
 
-      it 'searches by minimum unit price' do
-        merchant = Merchant.create!(name: 'Test Mer')
-        item1 = Item.create!(name: 'Small', description: 'asd', unit_price: 1, merchant_id: merchant.id)
-        item2 = Item.create!(name: 'Med', description: 'asd', unit_price: 3, merchant_id: merchant.id)
-        item3 = Item.create!(name: 'Large', description: 'asd', unit_price: 5, merchant_id: merchant.id)
+    it 'searches by minimum unit price' do
+      merchant = Merchant.create!(name: 'Test Mer')
+      item1 = Item.create!(name: 'Small', description: 'asd', unit_price: 1, merchant_id: merchant.id)
+      item2 = Item.create!(name: 'Med', description: 'asd', unit_price: 3, merchant_id: merchant.id)
+      item3 = Item.create!(name: 'Large', description: 'asd', unit_price: 5, merchant_id: merchant.id)
 
-        get api_v1_items_find_path, params: { min_price: 2 }
+      get api_v1_items_find_path, params: { min_price: 2 }
 
-        expect(response).to be_successful
+      expect(response).to be_successful
 
-        items = JSON.parse(response.body, symbolize_names: true)
+      items = JSON.parse(response.body, symbolize_names: true)
 
-        expect(items[:data][:attributes][:name]).to eq(item3.name)
-        expect(items[:data][:attributes][:name]).to_not include(item1.name, item2.name)
-      end
+      expect(items[:data][:attributes][:name]).to eq(item3.name)
+      expect(items[:data][:attributes][:name]).to_not include(item1.name, item2.name)
+    end
 
-      it 'searches by maximum unit price' do
-        merchant = Merchant.create!(name: 'Test Mer')
-        item1 = Item.create!(name: 'Small', description: 'asd', unit_price: 1, merchant_id: merchant.id)
-        item2 = Item.create!(name: 'Med', description: 'asd', unit_price: 3, merchant_id: merchant.id)
-        item3 = Item.create!(name: 'Large', description: 'asd', unit_price: 5, merchant_id: merchant.id)
+    it 'searches by maximum unit price' do
+      merchant = Merchant.create!(name: 'Test Mer')
+      item1 = Item.create!(name: 'Small', description: 'asd', unit_price: 1, merchant_id: merchant.id)
+      item2 = Item.create!(name: 'Med', description: 'asd', unit_price: 3, merchant_id: merchant.id)
+      item3 = Item.create!(name: 'Large', description: 'asd', unit_price: 5, merchant_id: merchant.id)
 
-        get api_v1_items_find_path, params: { max_price: 100 }
+      get api_v1_items_find_path, params: { max_price: 100 }
 
-        expect(response).to be_successful
+      expect(response).to be_successful
 
-        items = JSON.parse(response.body, symbolize_names: true)
+      items = JSON.parse(response.body, symbolize_names: true)
 
-        expect(items[:data][:attributes][:name]).to eq(item3.name)
-        expect(items[:data][:attributes][:name]).to_not include(item2.name, item1.name)
-      end
+      expect(items[:data][:attributes][:name]).to eq(item3.name)
+      expect(items[:data][:attributes][:name]).to_not include(item2.name, item1.name)
+    end
 
-      it 'searches between minimum and maximum unit price' do
-        merchant = Merchant.create!(name: 'Test Mer')
-        item1 = Item.create!(name: 'Small', description: 'asd', unit_price: 1, merchant_id: merchant.id)
-        item2 = Item.create!(name: 'Med', description: 'asd', unit_price: 3, merchant_id: merchant.id)
-        item3 = Item.create!(name: 'Large', description: 'asd', unit_price: 5, merchant_id: merchant.id)
+    it 'searches between minimum and maximum unit price' do
+      merchant = Merchant.create!(name: 'Test Mer')
+      item1 = Item.create!(name: 'Small', description: 'asd', unit_price: 1, merchant_id: merchant.id)
+      item2 = Item.create!(name: 'Med', description: 'asd', unit_price: 3, merchant_id: merchant.id)
+      item3 = Item.create!(name: 'Large', description: 'asd', unit_price: 5, merchant_id: merchant.id)
 
-        get api_v1_items_find_path, params: { min_price: 2, max_price: 6 }
+      get api_v1_items_find_path, params: { min_price: 2, max_price: 6 }
 
-        expect(response).to be_successful
+      expect(response).to be_successful
 
-        items = JSON.parse(response.body, symbolize_names: true)
+      items = JSON.parse(response.body, symbolize_names: true)
 
-        expect(items[:data][:attributes][:name]).to eq(item3.name)
-        expect(items[:data][:attributes][:name]).to_not include(item1.name, item2.name)
-      end
+      expect(items[:data][:attributes][:name]).to eq(item3.name)
+      expect(items[:data][:attributes][:name]).to_not include(item1.name, item2.name)
     end
   end
 end
