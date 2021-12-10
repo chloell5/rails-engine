@@ -24,7 +24,18 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def find
-    render json: ItemSerializer.new(Item.find_name(params[:name]))
+    case
+    when params[:name]
+      render json: ItemSerializer.new(Item.find_name(params[:name]))
+    when params[:min_price] && params[:max_price]
+      render json: ItemSerializer.new(Item.find_between(params[:min_price], params[:max_price]))
+    when params[:min_price]
+      render json: ItemSerializer.new(Item.find_min(params[:min_price]))
+    when params[:max_price]
+      render json: ItemSerializer.new(Item.find_max(params[:max_price]))
+    else
+      render json: { data: {} }
+    end
   end
 
   private

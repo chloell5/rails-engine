@@ -9,4 +9,16 @@ class Item < ApplicationRecord
   def self.find_name(term)
     where('name ilike ?', "%#{term}%").first
   end
+
+  def self.find_min(price)
+    where('unit_price >= ?', price).first
+  end
+
+  def self.find_max(price)
+    where('unit_price <= ?', price).first
+  end
+
+  def self.find_between(min, max)
+    where('unit_price > ? AND unit_price < ?', min, max).first
+  end
 end
