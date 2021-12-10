@@ -83,7 +83,7 @@ This is a solo project for the Turing School of Software and Design. In it, we l
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@chloell5](https://twitter.com/chloell5) - chloell@protonmail.ch@chloell@protonmail.ch_client.com
+Chloe Price - [@chloell5](https://twitter.com/chloell5) - chloell@protonmail.ch
 
 Project Link: [https://github.com/chloell5/rails-engine](https://github.com/chloell5/rails-engine)
 
