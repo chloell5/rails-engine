@@ -23,7 +23,9 @@ class Api::V1::ItemsController < ApplicationController
     Item.delete(params[:id])
   end
 
-  def find; end
+  def find
+    render json: ItemSerializer.new(Item.find_name(params[:name]))
+  end
 
   private
 
