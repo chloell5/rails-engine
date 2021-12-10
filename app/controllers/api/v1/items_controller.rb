@@ -23,9 +23,7 @@ class Api::V1::ItemsController < ApplicationController
     Item.delete(params[:id])
   end
 
-  def find
-
-  end
+  def find; end
 
   private
 

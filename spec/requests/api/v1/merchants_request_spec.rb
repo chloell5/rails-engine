@@ -64,10 +64,10 @@ describe 'Merchant API' do
 
     describe 'search functionality' do
       it 'searches for valid terms and returns all' do
-        merchant1 = Merchant.create(name: "Test 1")
-        merchant2 = Merchant.create(name: "Test 2")
-        merchant3 = Merchant.create(name: "Fail 1")
-        merchant4 = Merchant.create(name: "Another test")
+        merchant1 = Merchant.create(name: 'Test 1')
+        merchant2 = Merchant.create(name: 'Test 2')
+        merchant3 = Merchant.create(name: 'Fail 1')
+        merchant4 = Merchant.create(name: 'Another test')
 
         get api_v1_merchants_find_all_path, params: { name: 'tesT' }
 
@@ -85,10 +85,10 @@ describe 'Merchant API' do
       end
 
       it 'returns an array of length 0 when nothing is found' do
-        Merchant.create(name: "Test 1")
-        Merchant.create(name: "Test 2")
-        Merchant.create(name: "Fail 1")
-        Merchant.create(name: "Another test")
+        Merchant.create(name: 'Test 1')
+        Merchant.create(name: 'Test 2')
+        Merchant.create(name: 'Fail 1')
+        Merchant.create(name: 'Another test')
 
         get api_v1_merchants_find_all_path, params: { name: 'notfound' }
 

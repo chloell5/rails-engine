@@ -50,13 +50,13 @@ describe 'Item API' do
   it 'creates an item' do
     merchant = create(:merchant)
     item_params = {
-                    name: "Test",
-                    description: "I really hope this works",
-                    unit_price: 123.45,
-                    merchant_id: merchant.id
-                  }
+      name: 'Test',
+      description: 'I really hope this works',
+      unit_price: 123.45,
+      merchant_id: merchant.id
+    }
 
-    headers = {"CONTENT_TYPE" => "application/json"}
+    headers = { 'CONTENT_TYPE' => 'application/json' }
 
     post api_v1_items_path, headers: headers, params: JSON.generate(item: item_params)
 
@@ -78,12 +78,12 @@ describe 'Item API' do
     description = item.description
     unit_price = item.unit_price
     item_params = {
-                    name: "Test Edit",
-                    description: "I really believe this will work",
-                    unit_price: 543.21
-                  }
+      name: 'Test Edit',
+      description: 'I really believe this will work',
+      unit_price: 543.21
+    }
 
-    headers = {"CONTENT_TYPE" => "application/json"}
+    headers = { 'CONTENT_TYPE' => 'application/json' }
 
     patch api_v1_item_path(item), headers: headers, params: JSON.generate(item: item_params)
 
