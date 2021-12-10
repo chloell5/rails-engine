@@ -26,26 +26,35 @@ describe 'Item API' do
       expect(items[:data].first[:attributes][:unit_price]).to be_a Float
     end
 
-    it 'gets one item' do
-      merchant = create(:merchant)
-      item = create(:item, merchant_id: merchant.id)
+    describe 'one item' do
+      it 'gets one item' do
+        merchant = create(:merchant)
+        item = create(:item, merchant_id: merchant.id)
 
-      get api_v1_item_path(item)
+        get api_v1_item_path(item)
 
-      expect(response).to be_successful
+        expect(response).to be_successful
 
-      items = JSON.parse(response.body, symbolize_names: true)
+        items = JSON.parse(response.body, symbolize_names: true)
 
-      expect(items).to be_a(Hash)
-      expect(items[:data]).to have_key(:id)
-      expect(items[:data]).to have_key(:type)
-      expect(items[:data][:type]).to eq('item')
-      expect(items[:data][:attributes]).to have_key(:name)
-      expect(items[:data][:attributes]).to have_key(:description)
-      expect(items[:data][:attributes]).to have_key(:unit_price)
-      expect(items[:data][:attributes][:name]).to be_a String
-      expect(items[:data][:attributes][:description]).to be_a String
-      expect(items[:data][:attributes][:unit_price]).to be_a Float
+        expect(items).to be_a(Hash)
+        expect(items[:data]).to have_key(:id)
+        expect(items[:data]).to have_key(:type)
+        expect(items[:data][:type]).to eq('item')
+        expect(items[:data][:attributes]).to have_key(:name)
+        expect(items[:data][:attributes]).to have_key(:description)
+        expect(items[:data][:attributes]).to have_key(:unit_price)
+        expect(items[:data][:attributes][:name]).to be_a String
+        expect(items[:data][:attributes][:description]).to be_a String
+        expect(items[:data][:attributes][:unit_price]).to be_a Float
+      end
+
+      it '404s on invalid ID' do
+        get '/api/v1/merchants/1111111'
+
+        expect(response).to_not be_successful
+        expect(response).to have_http_status(404)
+      end
     end
 
     it 'creates an item' do
@@ -142,8 +151,8 @@ describe 'Item API' do
 
         items = JSON.parse(response.body, symbolize_names: true)
 
-        expect(items[:data][:attributes][:name]).to eq(item1.name)
-        expect(items[:data][:attributes][:name]).to_not include(item2.name, item3.name)
+        expect(items[:data][:attributes][:name]).to eq(item3.name)
+        expect(items[:data][:attributes][:name]).to_not include(item2.name, item1.name)
       end
 
       it 'searches by minimum unit price' do
@@ -158,8 +167,8 @@ describe 'Item API' do
 
         items = JSON.parse(response.body, symbolize_names: true)
 
-        expect(items[:data][:attributes][:name]).to eq(item2.name)
-        expect(items[:data][:attributes][:name]).to_not include(item1.name, item3.name)
+        expect(items[:data][:attributes][:name]).to eq(item3.name)
+        expect(items[:data][:attributes][:name]).to_not include(item1.name, item2.name)
       end
 
       it 'searches by maximum unit price' do
@@ -174,8 +183,8 @@ describe 'Item API' do
 
         items = JSON.parse(response.body, symbolize_names: true)
 
-        expect(items[:data][:attributes][:name]).to eq(item1.name)
-        expect(items[:data][:attributes][:name]).to_not include(item2.name, item3.name)
+        expect(items[:data][:attributes][:name]).to eq(item3.name)
+        expect(items[:data][:attributes][:name]).to_not include(item2.name, item1.name)
       end
 
       it 'searches between minimum and maximum unit price' do
@@ -190,21 +199,8 @@ describe 'Item API' do
 
         items = JSON.parse(response.body, symbolize_names: true)
 
-        expect(items[:data][:attributes][:name]).to eq(item2.name)
-        expect(items[:data][:attributes][:name]).to_not include(item1.name, item3.name)
-      end
-
-      it 'returns empty when no params' do
-        merchant = Merchant.create!(name: 'Test Mer')
-        item1 = Item.create!(name: 'Small', description: 'asd', unit_price: 1, merchant_id: merchant.id)
-        item2 = Item.create!(name: 'Med', description: 'asd', unit_price: 3, merchant_id: merchant.id)
-        item3 = Item.create!(name: 'Large', description: 'asd', unit_price: 5, merchant_id: merchant.id)
-
-        get api_v1_items_find_path
-
-        expect(response).to be_successful
-
-        items = JSON.parse(response.body, symbolize_names: true)
+        expect(items[:data][:attributes][:name]).to eq(item3.name)
+        expect(items[:data][:attributes][:name]).to_not include(item1.name, item2.name)
       end
     end
   end

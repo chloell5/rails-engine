@@ -21,45 +21,70 @@ describe 'Merchant API' do
       expect(merchants[:data].first[:attributes][:name]).to be_a String
     end
 
-    it 'gets one merchant' do
-      merchant = create(:merchant)
+    describe 'one merchant' do
+      it 'gets one merchant' do
+        merchant = create(:merchant)
 
-      get api_v1_merchant_path(merchant)
+        get api_v1_merchant_path(merchant)
 
-      expect(response).to be_successful
+        expect(response).to be_successful
 
-      merchants = JSON.parse(response.body, symbolize_names: true)
+        merchants = JSON.parse(response.body, symbolize_names: true)
 
-      expect(merchants).to be_a(Hash)
-      expect(merchants[:data]).to have_key(:id)
-      expect(merchants[:data]).to have_key(:type)
-      expect(merchants[:data][:type]).to eq('merchant')
-      expect(merchants[:data][:attributes]).to have_key(:name)
-      expect(merchants[:data][:attributes][:name]).to be_a String
+        expect(merchants).to be_a(Hash)
+        expect(merchants[:data]).to have_key(:id)
+        expect(merchants[:data]).to have_key(:type)
+        expect(merchants[:data][:type]).to eq('merchant')
+        expect(merchants[:data][:attributes]).to have_key(:name)
+        expect(merchants[:data][:attributes][:name]).to be_a String
+      end
+
+      it '404s on invalid ID' do
+        get '/api/v1/merchants/1111111'
+
+        expect(response).to_not be_successful
+        expect(response).to have_http_status(404)
+      end
     end
 
-    it 'gets a merchants items' do
-      merchant = create(:merchant)
-      create_list(:item, 10, merchant_id: merchant.id)
+    describe 'merchant items' do
+      it 'gets a merchants items' do
+        merchant = create(:merchant)
+        create_list(:item, 10, merchant_id: merchant.id)
 
-      get api_v1_merchant_items_path(merchant)
+        get api_v1_merchant_items_path(merchant)
 
-      expect(response).to be_successful
+        expect(response).to be_successful
 
-      items = JSON.parse(response.body, symbolize_names: true)
+        items = JSON.parse(response.body, symbolize_names: true)
 
-      expect(items).to be_a(Hash)
-      expect(items[:data]).to be_an(Array)
-      expect(items[:data].count).to eq(10)
-      expect(items[:data].first).to have_key(:id)
-      expect(items[:data].first).to have_key(:type)
-      expect(items[:data].first[:type]).to eq('item')
-      expect(items[:data].first[:attributes]).to have_key(:name)
-      expect(items[:data].first[:attributes]).to have_key(:description)
-      expect(items[:data].first[:attributes]).to have_key(:unit_price)
-      expect(items[:data].first[:attributes][:name]).to be_a String
-      expect(items[:data].first[:attributes][:description]).to be_a String
-      expect(items[:data].first[:attributes][:unit_price]).to be_a Float
+        expect(items).to be_a(Hash)
+        expect(items[:data]).to be_an(Array)
+        expect(items[:data].count).to eq(10)
+        expect(items[:data].first).to have_key(:id)
+        expect(items[:data].first).to have_key(:type)
+        expect(items[:data].first[:type]).to eq('item')
+        expect(items[:data].first[:attributes]).to have_key(:name)
+        expect(items[:data].first[:attributes]).to have_key(:description)
+        expect(items[:data].first[:attributes]).to have_key(:unit_price)
+        expect(items[:data].first[:attributes][:name]).to be_a String
+        expect(items[:data].first[:attributes][:description]).to be_a String
+        expect(items[:data].first[:attributes][:unit_price]).to be_a Float
+      end
+
+      it 'when no items' do
+        merchant = create(:merchant)
+
+        get api_v1_merchant_items_path(merchant)
+
+        expect(response).to be_successful
+
+        items = JSON.parse(response.body, symbolize_names: true)
+
+        expect(items).to be_a(Hash)
+        expect(items[:data]).to be_an(Array)
+        expect(items[:data].count).to eq(0)
+      end
     end
 
     describe 'search functionality' do

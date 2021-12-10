@@ -21,7 +21,7 @@ RSpec.describe Item do
     end
 
     it 'can find items by name' do
-      expect(Item.find_name('e')).to eq(@item2)
+      expect(Item.find_name('e')).to eq(@item3)
     end
 
     it 'can find items by min' do
