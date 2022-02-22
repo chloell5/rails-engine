@@ -65,6 +65,26 @@
 
 This is a solo project for the Turing School of Software and Design. In it, we learned how to create our own API and connect to endpoints, as well as testing with RSpec and Postman.
 
+After cloning the repo:
+  1. `bundle install`
+  2. Run `rails db:{create,migrate}`
+  3. Run `rails s`
+  4. API endpoints are:
+```
+GET     /api/vi/items
+POST    /api/vi/items
+GET     /api/vi/items/find
+GET     /api/vi/items/:id
+PATCH   /api/vi/items/:id
+DELETE  /api/vi/items/:id
+GET     /api/v1/items/:item_id/merchant(.:format)
+
+GET     /api/v1/merchants
+GET     /api/v1/merchants/:id
+GET     /api/v1/merchants/:id/items
+
+```
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
